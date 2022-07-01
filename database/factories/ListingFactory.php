@@ -4,7 +4,7 @@ namespace Database\Factories;
 
 use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Factories\Factory;
-
+use Faker\Generator as Faker;
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Listing>
  */
@@ -30,7 +30,7 @@ class ListingFactory extends Factory
             'slug' => Str::slug($title) . '-' . rand(1111, 9999),
             'company' => $this->faker->company(),
             'location' => $this->faker->country(),
-            'logo' => $this->faker->image(storage_path('app/public')),
+            'logo' => $this->faker->image(storage_path('app/public/images'), 200, 200, null, true),
             'is_highlighted' => rand(0, 100) > 75,
             'is_active' => true,
             'content' => $content,

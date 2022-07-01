@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Tag;
+use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
@@ -43,6 +44,21 @@ class Listing extends Model
     public function scopeActive($query)
     {
         return $query->whereIsActive(true);
+    }
+
+    /**
+     *
+     */
+    public static function searchFilter($search)
+    {
+        return function($listing) use($search) {
+            if (Str::contains(strtolower($listing->title), $search)) return true;
+            if (Str::contains(strtolower($listing->company), $search)) return true;
+            if (Str::contains(strtolower($listing->location), $search)) return true;
+            // if (Str::contains(strtolower($listing->content), $search)) return true;
+
+            return false;
+        };
     }
 
 }

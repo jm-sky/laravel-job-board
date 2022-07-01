@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Tag;
 use App\Models\Listing;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 
 class ListingController extends Controller
@@ -13,10 +14,21 @@ class ListingController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         $listings = Listing::active()->with('tags')->latest()->get();
         $tags = Tag::orderBy('name')->get();
+
+        if ($request->has('s')) {
+            $search = strtolower($request->s);
+            $listings = $listings->filter(Listing::searchFilter($search));
+        }
+
+        if ($tag = $request->tag) {
+            $listings = $listings->filter(function($listing) use ($tag) {
+                return $listing->tags->contains('slug', $tag);
+            });
+        }
 
         return view('listings.index', compact('listings', 'tags'));
     }

@@ -3,15 +3,19 @@
 namespace App\Http\Controllers;
 
 use App\Models\Tag;
+use App\Models\User;
 use App\Models\Listing;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 class ListingController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
+     * @param  \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
     public function index(Request $request)
@@ -33,6 +37,34 @@ class ListingController extends Controller
         return view('listings.index', compact('listings', 'tags'));
     }
 
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  Listing  $listing
+     * @param  \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\Response
+     */
+    public function show(Listing $listing, Request $request)
+    {
+        return view('listings.show', compact('listing'));
+    }
+
+    /**
+     * @param  Listing  $listing
+     * @param  \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\Response
+     */
+    public function apply(Listing $listing, Request $request)
+    {
+        $listing->clicks()->create([
+            'user_agent' => $request->userAgent(),
+            'ip' => $request->ip()
+        ]);
+
+        return redirect()->to($listing->apply_link);
+    }
+
     /**
      * Show the form for creating a new resource.
      *
@@ -40,7 +72,7 @@ class ListingController extends Controller
      */
     public function create()
     {
-        //
+        return view('listings.create');
     }
 
     /**
@@ -51,18 +83,63 @@ class ListingController extends Controller
      */
     public function store(Request $request)
     {
-        //
-    }
+        $validationArray = [
+            'title' => 'required',
+            'company' => 'required',
+            'logo' => 'file|max:2048',
+            'location' => 'required',
+            'apply_link' => 'required|url',
+            'content' => 'required',
+            'payment_method_id' => 'required',
+        ];
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
+        if (! Auth::check()) {
+            $validationArray = array_merge([
+                'name' => 'required',
+                'email' => 'required|email|unique:users',
+                'password' => 'required|confirmed|min:5',
+            ]);
+        }
+
+        $request->validate($validationArray);
+        $user = $this->getOrCreateUserAndLogin($request);
+
+        try {
+            $amount = 9900; // 99.00 USD
+
+            if ($request->filled('is_highlighted')) $amount += 1900;
+
+            $user->charge($amount, $request->payment_method_id);
+
+            $md = new \ParsedownExtra();
+            $listing = $user->listings()->create([
+                'title' => $request->title,
+                'slug' => Str::slug($request->title) . '-' . rand(1111, 9999),
+                'company' => $request->company,
+                'logo' => basename(optional($request->file('logo'))->store('public/images')),
+                'location' => $request->location,
+                'apply_link' => $request->apply_link,
+                'content' => $md->text($request->content),
+                'is_highlighted' => $request->filled('is_highlighted'),
+                'is_active' => true,
+            ]);
+
+            foreach (explode(',', $request->tags) as $requestTag) {
+                $tag = Tag::firstOrCreate([
+                    'slug' => Str::slug(trim($requestTag))
+                ], [
+                    'name' => ucwords(trim($requestTag))
+                ]);
+
+                $tag->listings()->attach($listing->id);
+            }
+
+            return redirect()->route('dashboard');
+
+        } catch (\Exception $e) {
+            return redirect()->back()->withErrors(['error' => $e->getMessage()]);
+        }
+
     }
 
     /**
@@ -97,5 +174,29 @@ class ListingController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+
+    /**
+     * @param  \Illuminate\Http\Request  $request
+     * @return object
+     */
+    protected function getOrCreateUserAndLogin($request)
+    {
+        $user = Auth::user();
+
+        if ($user) return $user;
+
+        $user = User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
+        ]);
+
+        $user->createAsStripeCustomer();
+
+        Auth::login($user);
+
+        return $user;
     }
 }

@@ -16,6 +16,14 @@ class Listing extends Model
     /**
      *
      */
+    public function getRouteKeyName()
+    {
+        return 'slug';
+    }
+
+    /**
+     *
+     */
     public function clicks()
     {
         return $this->hasMany(Click::class);

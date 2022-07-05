@@ -51,6 +51,9 @@
             </div>
 
             <div class="flex items-center justify-end mt-4">
+                @if (Route::has('register'))
+                    <a href="{{ route('register') }}" class="mr-4 text-sm text-gray-700 dark:text-gray-500 underline">Register</a>
+                @endif
                 <div class="py-sm text-sm text-gray-600 mr-2">Sign in with:</div>
                 <a href="{{ route('socialite.redirect', ['driver' => 'github']) }}" class="">
                     <svg fill="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="w-5 h-5" viewBox="0 0 24 24">

@@ -14,7 +14,7 @@
 require 'vendor/autoload.php';
 
 // This is your Stripe CLI webhook secret for testing your endpoint locally.
-$endpoint_secret = 'whsec_229f7b9a2c2d56628bf85f364febc26241d447d6d9b0e1bb7f049f9bc76e989b';
+$endpoint_secret = '_______________';
 
 $payload = @file_get_contents('php://input');
 $sig_header = $_SERVER['HTTP_STRIPE_SIGNATURE'];

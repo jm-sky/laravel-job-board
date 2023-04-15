@@ -25,19 +25,31 @@ class SocialiteAuthController extends Controller
      */
     public function callback($driver = 'github')
     {
-        $githubUser = Socialite::driver($driver)->user();
+        $providerUser = Socialite::driver($driver)->user();
 
-        $user = User::where('provider', $driver)->where('provider_id', $githubUser->id)->first();
-        $user = $user ?? User::where('email', $githubUser->email)->first();
+        /** @var User */
+        $user = User::where('provider', $driver)->where('provider_id', $providerUser->id)->first();
 
+        /** @var User */
+        $user = $user ?? User::where('email', $providerUser->email)->first();
+
+        if ($user) {
+            $user->provider = $driver;
+            $user->provider_id = $providerUser->id;
+            $user->provider_token = $providerUser->token;
+            $user->provider_refresh_token = $providerUser->refreshToken;
+            $user->save();
+        }
+
+        /** @var User */
         $user = $user ?? User::create([
-            'name' => $githubUser->name,
-            'email' => $githubUser->email,
+            'name' => $providerUser->name ?? $providerUser->nickname,
+            'email' => $providerUser->email,
             'password' => Hash::make(Str::random(32)),
             'provider' => $driver,
-            'provider_id' => $githubUser->id,
-            'provider_token' => $githubUser->token,
-            'provider_refresh_token' => $githubUser->refreshToken,
+            'provider_id' => $providerUser->id,
+            'provider_token' => $providerUser->token,
+            'provider_refresh_token' => $providerUser->refreshToken,
         ]);
 
         Auth::login($user);

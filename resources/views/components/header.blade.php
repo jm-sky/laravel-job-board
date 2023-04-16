@@ -14,7 +14,7 @@
             <div class="pr-4">
                 <x-dropdown class="mr-4">
                     <x-slot name="trigger">
-                        <a href="#">{{ \Auth::user()->name }}</a>
+                        <a href="#" class="py-1 px-3 border rounded border-transparent hover:text-indigo-500 hover:border-indigo-500 transition-all">{{ \Auth::user()->name }}</a>
                     </x-slot>
                     <x-slot name="content">
                         <x-dropdown-link href="{{ route('dashboard') }}">Dashboard</x-dropdown-link>

@@ -1,5 +1,10 @@
 <x-app-layout>
     <x-hero></x-hero>
+
+    <div class="border rounded p-4 my-5 bg-slate-100">
+    TEST
+    </div>
+
     <section class="container px-5 py-12 mx-auto">
         <div class="mb-12">
             <div class="flex-justify-center">

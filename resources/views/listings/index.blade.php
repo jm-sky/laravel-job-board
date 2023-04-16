@@ -23,9 +23,9 @@
                         <h2 class="text-xl font-bold text-gray-900 title-font mb-1">{{ $listing->title }}</h2>
                         <p class="leading-relaxed text-gray-900">{{ $listing->company }}</p> &mdash; <span class="text-gray-600">{{ $listing->location }}</span>
                     </div>
-                    <div class="md:flex-grow mr-8 flex items-center justify-start">
+                    <div class="md:flex-grow mr-8 flex items-center justify-start gap-2">
                         @foreach($listing->tags as $tag)
-                            <span class="inline-block ml-2 tracking-wide text-xs font-medium title-font py-0.5 px-1.5 border hover:bg-indigo-500 hover:text-white border-indigo-500 uppercase {{ $tag->slug == request()->tag ? 'bg-indigo-500 text-white' : 'bg-white text-indigo-500' }}">
+                            <span class="tag-item {{ $tag->slug == request()->tag ? 'bg-indigo-500 text-white' : 'bg-white text-indigo-500' }}">
                                 {{ $tag->name }}
                             </span>
                         @endforeach

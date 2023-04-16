@@ -15,7 +15,6 @@ class ListingController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @param  \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
     public function index(Request $request)
@@ -41,8 +40,6 @@ class ListingController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  Listing  $listing
-     * @param  \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
     public function show(Listing $listing, Request $request)
@@ -51,8 +48,6 @@ class ListingController extends Controller
     }
 
     /**
-     * @param  Listing  $listing
-     * @param  \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
     public function apply(Listing $listing, Request $request)
@@ -78,7 +73,6 @@ class ListingController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
@@ -145,7 +139,6 @@ class ListingController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
@@ -156,8 +149,6 @@ class ListingController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
@@ -168,20 +159,35 @@ class ListingController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function remove(Listing $listing)
     {
-        //
+        return view('listings.remove', compact('listing'));
+
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy(Listing $listing)
+    {
+        if ($listing->user_id != Auth::id()) {
+            return redirect()->back()->withErrors(['error' => 'It is not Your listing']);
+        }
+
+        $listing->delete();
+
+        return redirect('dashboard');
     }
 
 
     /**
-     * @param  \Illuminate\Http\Request  $request
      * @return object
      */
-    protected function getOrCreateUserAndLogin($request)
+    protected function getOrCreateUserAndLogin(Request $request)
     {
         $user = Auth::user();
 

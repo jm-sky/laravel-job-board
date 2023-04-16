@@ -25,6 +25,10 @@
                             <strong>Company: </strong>{{ $listing->company }}
                         </p>
                         <a href="{{ route('listings.apply', $listing->slug) }}" class="block text-center my-4 tracking-wide bg-white text-indigo-500 text-sm font-medium title-font py-2 border rounded border-indigo-500 hover:bg-indigo-500 hover:text-white uppercase">Apply Now</a>
+
+                        @if($listing->user_id == Auth::id())
+                        <a href="{{ route('listings.remove', $listing->slug) }}" class="block text-center my-4 tracking-wide bg-white text-red-500 text-sm font-medium title-font py-2 border rounded border-red-500 hover:bg-red-500 hover:text-white uppercase">Delete</a>
+                        @endif
                     </div>
                 </div>
             </div>

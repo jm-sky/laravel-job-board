@@ -29,3 +29,5 @@ require __DIR__ . '/auth.php';
 
 Route::get('/{listing}', [ListingController::class, 'show'])->name('listings.show');
 Route::get('/{listing}/apply', [ListingController::class, 'apply'])->name('listings.apply');
+Route::get('/{listing}/remove', [ListingController::class, 'remove'])->name('listings.remove');
+Route::get('/{listing}/destroy', [ListingController::class, 'destroy'])->name('listings.destroy');

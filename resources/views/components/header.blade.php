@@ -1,20 +1,15 @@
 <header class="text-gray-600 body-font border-b border-gray-100">
     <div class="container mx-auto flex flex-wrap p-5 flex-col md:flex-row items-center">
-        <a href="{{ route('listings.index') }}" class="flex title-font font-medium items-center text-gray-900 mb-4 md:mb-0">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="w-10 h-10 text-white p-2 bg-indigo-500 rounded-full" viewBox="0 0 24 24">
-                <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path>
-            </svg>
-            <span class="ml-3 text-xl">{{ config('app.name') }}</span>
-        </a>
+        <x-logo-link />
         <nav class="md:ml-auto flex flex-wrap items-center text-base justify-center">
             @guest
-                <a href="{{ route('login') }}" class="mr-5 hover:text-gray-900">Employers</a>
+                <a href="{{ route('login') }}" class="mr-5 btn-outline">Employers</a>
             @endguest
             @auth
             <div class="pr-4">
                 <x-dropdown class="mr-4">
                     <x-slot name="trigger">
-                        <a href="#" class="py-1 px-3 border rounded border-transparent hover:text-indigo-500 hover:border-indigo-500 transition-all">{{ \Auth::user()->name }}</a>
+                        <a href="#" class="btn-outline">{{ \Auth::user()->name }}</a>
                     </x-slot>
                     <x-slot name="content">
                         <x-dropdown-link href="{{ route('dashboard') }}">Dashboard</x-dropdown-link>

@@ -18,7 +18,7 @@ class ListingFactory extends Factory
     public function definition()
     {
         $title = $this->faker->sentence(rand(5, 7));
-        $datetime = $this->faker->dateTimeBetween('-;1 month', 'now');
+        $datetime = $this->faker->dateTimeBetween('-1 month', 'now');
 
         $content = '';
         for ($i = 0; $i < 5; $i++) {

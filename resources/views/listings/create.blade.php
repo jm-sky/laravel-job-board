@@ -18,7 +18,7 @@
                 id="payment_form"
                 method="post"
                 enctype="multipart/form-data"
-                class="bg-gray-100 p-4"
+                class="rounded border bg-gray-100 p-4"
             >
                 @guest
                     <div class="flex mb-4">

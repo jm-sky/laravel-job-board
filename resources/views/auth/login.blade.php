@@ -50,7 +50,7 @@
                 <x-button class="ml-3">{{ __('Log in') }}</x-button>
             </div>
 
-            <div class="flex items-center justify-end mt-4">
+            <div class="flex items-center justify-end mt-6">
                 @if (Route::has('register'))
                     <a href="{{ route('register') }}" class="mr-4 text-sm text-gray-700 dark:text-gray-500 underline">Register</a>
                 @endif

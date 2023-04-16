@@ -3,9 +3,9 @@
         <div class="container px-5 py-24 mx-auto">
             <div class="mb-12">
                 <h2 class="text-2xl font-medium text-gray-900 title-font">{{ $listing->title }}</h2>
-                <div class="md:flex-grow mr-8 mt-2 flex items-center justify-start">
+                <div class="md:flex-grow mr-8 mt-2 flex items-center justify-start gap-2">
                     @foreach($listing->tags as $tag)
-                        <span class="inline-block mr-2 tracking-wide text-indigo-500 text-xs font-medium title-font py-0.5 px-1.5 border border-indigo-500 uppercase">{{ $tag->name }}</span>
+                        <span class="tag-item">{{ $tag->name }}</span>
                     @endforeach
                 </div>
             </div>

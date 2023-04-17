@@ -7,11 +7,12 @@ use App\Models\User;
 use App\Models\Listing;
 use Illuminate\Support\Str;
 use Illuminate\Database\Seeder;
-use Database\Factories\TagFactory;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
 class DatabaseSeeder extends Seeder
 {
+
+    const USERS_TO_CREATE = 10;
+
     /**
      * Seed the application's database.
      *
@@ -19,8 +20,11 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        $tags = Tag::factory(10)->create();
+        //-------------------------------------------------------
+        $this->call(TagSeeder::class);
+        $tags = Tag::all();
 
+        //-------------------------------------------------------
         $user = User::create([
             'name' => 'Janek',
             'email' => 'jan.madeyski@gmail.com',
@@ -34,7 +38,7 @@ class DatabaseSeeder extends Seeder
             $listing->tags()->attach($tags->random(2));
         });
 
-        User::factory(10)->create()
+        User::factory(self::USERS_TO_CREATE)->create()
             ->each(function($user) use ($tags) {
                 Listing::factory(\rand(1, 3))->create([
                     'user_id' => $user->id

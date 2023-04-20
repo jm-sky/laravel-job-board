@@ -2,11 +2,11 @@ version: '3'
 services:
     laravel.test:
         build:
-            context: ./vendor/laravel/sail/runtimes/8.2
+            context: ./vendor/laravel/sail/runtimes/8.1
             dockerfile: Dockerfile
             args:
                 WWWGROUP: '${WWWGROUP}'
-        image: sail-8.2/app
+        image: sail-8.1/app
         extra_hosts:
             - 'host.docker.internal:host-gateway'
         ports:
@@ -40,14 +40,7 @@ services:
         networks:
             - sail
         healthcheck:
-            test:
-                - CMD
-                - pg_isready
-                - '-q'
-                - '-d'
-                - '${DB_DATABASE}'
-                - '-U'
-                - '${DB_USERNAME}'
+            test: [CMD, pg_isready, '-q', '-d', '${DB_DATABASE}', '-U', '${DB_USERNAME}']
             retries: 3
             timeout: 5s
     redis:
@@ -59,10 +52,7 @@ services:
         networks:
             - sail
         healthcheck:
-            test:
-                - CMD
-                - redis-cli
-                - ping
+            test: [CMD, redis-cli, ping]
             retries: 3
             timeout: 5s
     minio:
@@ -79,11 +69,7 @@ services:
             - sail
         command: 'minio server /data/minio --console-address ":8900"'
         healthcheck:
-            test:
-                - CMD
-                - curl
-                - '-f'
-                - 'http://localhost:9000/minio/health/live'
+            test: [CMD, curl, '-f', 'http://localhost:9000/minio/health/live']
             retries: 3
             timeout: 5s
 networks:

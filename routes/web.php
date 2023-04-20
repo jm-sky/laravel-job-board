@@ -16,12 +16,15 @@ use App\Http\Controllers\DashboardController;
 |
 */
 
-Route::get('/auth/redirect/{driver}', [SocialiteAuthController::class, 'redirect'])->name('socialite.redirect');
-Route::get('/auth/{driver}/callback', [SocialiteAuthController::class, 'callback'])->name('socialite.callback');
+Route::get('/oauth/redirect/{driver}', [SocialiteAuthController::class, 'redirect'])->name('socialite.redirect');
+Route::get('/oauth/{driver}/callback', [SocialiteAuthController::class, 'callback'])->name('socialite.callback');
 
 Route::get('/', [ListingController::class, 'index'])->name('listings.index');
 Route::get('/new', [ListingController::class, 'create'])->name('listings.create');
 Route::post('/new', [ListingController::class, 'store'])->name('listings.store');
+
+Route::post('/privacy-policy ', [InformationController::class, 'privacyPolicy'])->name('privacy-policy');
+Route::post('/terms-of-use', [InformationController::class, 'termsOfUse'])->name('terms-of-use');
 
 Route::get('/dashboard', [DashboardController::class, 'index'])->middleware(['auth'])->name('dashboard');
 
